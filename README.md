@@ -1,2 +1,2 @@
-# StogieAwesome
-AI-powered cigar recommendations.
+# Squideroo
+Template for JavaScript projects.
