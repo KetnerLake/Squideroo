@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Three Column Layout</title>
+
+  <style>
+    body, html {
+      height: 100%;      
+      margin: 0;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    main {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #menu {
+      background: #f0f0f0;
+      box-sizing: border-box;
+      display: flex;      
+      flex-direction: column;
+      padding: 1rem;
+      width: 300px;      
+    }
+
+    #menu button.menu {
+      display: none;
+    }
+
+    #list {
+      background: #d0e0ff;      
+      box-sizing: border-box;
+      flex-basis: 0;
+      flex-grow: 1;      
+      max-width: 450px;      
+      min-width: 330px;
+      overflow-y: auto;
+      padding: 1rem;      
+    }
+
+    #list button.detail,
+    #list button.menu {
+      display: none;
+    }
+
+    #detail {
+      background: #fff;      
+      box-sizing: border-box;
+      container-type: inline-size;            
+      flex-basis: 0;
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 1rem;      
+    }
+
+    #detail button.detail {
+      display: none;
+    }
+
+    #detail form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #scrim {
+      background: rgba( 0, 0, 0, 0.40 );
+      display: none;      
+      height: 100%;      
+      left: 0;      
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      transition:
+        display 0.30s ease-in-out allow-discrete,
+        opacity 0.30s ease-in-out;
+      width: 100%;
+      z-index: 50;
+    }
+
+    /* Wide-screen layout */
+    @container ( min-width: 660px ) {
+      #detail form {
+        display: grid;
+        flex-direction: unset;
+        gap: 16px;
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* Tablet layout */
+    @media ( max-width: 990px ) {
+      #menu {
+        box-shadow: 2px 0 5px rgba( 0, 0, 0, 0.2 );        
+        height: 100vh;        
+        left: -330px;        
+        position: absolute;
+        top: 0;
+        transition: left 0.30s ease-in-out;
+        z-index: 100;
+      }
+
+      #menu[data-open] {
+        left: 0;
+      }
+
+      #menu button.menu {
+        display: inline;
+      }
+
+      #menu[data-open] ~ #scrim {
+        display: block;
+        opacity: 1.0;
+      }
+
+      @starting-style {
+        #menu[data-open] ~ #scrim {
+          display: block;
+          opacity: 0;
+        }
+      }
+
+      #list button.menu {
+        display: inline;
+      }
+    }
+
+    /* Smartphone layout */
+    @media ( max-width: 660px ) {
+      #list {
+        height: 100%;        
+        max-width: none;
+        min-width: 0;
+        overflow-y: auto;
+        width: 100%;        
+      }
+
+      #list button.detail {
+        display: inline;
+      }
+
+      #detail {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        left: 0;
+        overflow-y: auto;        
+        position: absolute;
+        top: calc( 100vh + 30px );
+        transition: top 0.30s ease-in-out;
+        width: 100%;
+        z-index: 50;
+      }
+
+      #detail[data-open] {
+        top: 0;
+      }
+
+      #detail button.detail {
+        display: inline;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main>
+
+    <section id="menu">
+      <h2>Menu</h2>
+      <button class="menu" type="button">Hide Menu</button>
+    </section>
+
+    <div id="scrim"></div>
+
+    <section id="list">
+      <h2>List</h2>
+      <button class="menu" type="button">Show Menu</button>
+      <button class="detail" type="button">Show Detail</button>      
+    </section>
+
+    <section id="detail">
+      <h2>Detail</h2>
+      <button class="detail" type="button">Hide Detail</button>            
+      <form>
+        <label style="display: flex; flex-direction: column;">
+          <p style="font-size: 14px; line-height: 20px; margin: 0; padding: 0;">Name</p>
+          <input style="box-sizing: border-box; height: 40px; font-size: 16px; margin: 0; padding: 0 0 0 16px;" type="text" value="Hotel California">        
+        </label>
+        <label style="display: flex; flex-direction: column;">
+          <p style="font-size: 14px; line-height: 20px; margin: 0; padding: 0;">Name</p>
+          <input style="box-sizing: border-box; height: 40px; font-size: 16px; margin: 0; padding: 0 0 0 16px;" type="text" value="Hotel California">        
+        </label>
+      </form>
+    </section>
+    
+  </main>
+
+  <script>
+    const pnl_detail = document.querySelector( '#detail' );        
+    const pnl_list = document.querySelector( '#list' );        
+    const pnl_menu = document.querySelector( '#menu' );
+
+    const btn_hide_menu = document.querySelector( '#menu button.menu' );
+    btn_hide_menu.addEventListener( 'click', () => pnl_menu.removeAttribute( 'data-open' ) );    
+
+    const btn_show_menu = document.querySelector( '#list button.menu' );    
+    btn_show_menu.addEventListener( 'click', () => pnl_menu.setAttribute( 'data-open', true ) );
+
+    const btn_show_detail = document.querySelector( '#list button.detail' );        
+    btn_show_detail.addEventListener( 'click', () => pnl_detail.setAttribute( 'data-open', true ) );    
+
+    const btn_hide_detail = document.querySelector( '#detail button.detail' );
+    btn_hide_detail.addEventListener( 'click', () => pnl_detail.removeAttribute( 'data-open' ) );        
+  </script>
+
+</body>
+</html>
